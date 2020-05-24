@@ -1,33 +1,34 @@
-#!/usr/bin/env -S deno run --unstable
+import { Command } from "https://deno.land/x/cmd/mod.ts";
+import Ask from "https://deno.land/x/ask/mod.ts";
 
-import { parse } from "https://deno.land/std/flags/mod.ts";
-import * as inquirer from 'https://unpkg.com/inquirer@7.1.0/lib/inquirer.js'
-import { Input, Confirm, Toggle, Number, Select, Checkbox } from 'https://deno.land/x/cliffy/prompt.ts';
+const program = new Command("Commitment cli");
+const ask = new Ask();
 
-const name = await Input.prompt( `What's your name?` );
+program
+  .version("0.1.0")
+  .option("create [item]", "It creates a new item (user, teams, etc)")
 
-const confirm = await Confirm.prompt( {
-    message: 'Would you like to buy a pizza?'
-} );
+program
+  .command("create [item]")
+  .description("run setup commands for all envs")
+  .option("-s, --setup_mode [mode]", "Which setup mode to use")
+  .action(async (item: string) => {
+    const answers = await ask.prompt([
+      {
+        name: "name",
+        type: "input",
+        message: "Name of the team:",
+      },
+    ]);
+    console.log(answers);
+    const response = await fetch('http://localhost:4000/teams', {
+        method: 'POST', // or 'PUT'
+        body: `{"name":"${answers['name']}"}`, // data can be `string` or {object}!
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      }).then(res => res.json())
+      console.log(response)
+  });
 
-const toggle = await Toggle.prompt( {
-    message: 'Would you like to buy a pizza?'
-} );
-
-const input = await Input.prompt( {
-    message: `What's your name?`
-} );
-
-const number = await Number.prompt( {
-    message: 'How old are you?'
-} );
-
-const select = await Select.prompt( {
-    message: 'Select your pizza?',
-    options: [ 'margherita', 'caprese', Select.separator( 'Special' ), 'diavola' ]
-} );
-
-const checkbox = await Checkbox.prompt( {
-    message: `Du you like any extra's?`,
-    options: [ 'mozzarella', 'olive', Checkbox.separator( 'Special' ), 'buffalo mozzarella' ]
-} );
+program.parse(Deno.args, undefined);
