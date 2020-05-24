@@ -25,10 +25,10 @@ export default async ({
   }
 
   const {
-    value: { name, role, jiraAdmin }
+    value: { name }
   } = await request.body();
 
-  await updateUser(userId, { name, role, jiraAdmin });
+  await updateUser(userId, { name });
 
   response.body = { msg: "User updated" };
 };

@@ -14,19 +14,17 @@ export default async ({
     return;
   }
 
-  console.log(await request.body())
-
   const {
-    value: { name, role, jiraAdmin }
+    value: { name }
   } = await request.body();
 
-  if (!name || !role) {
+  if (!name) {
     response.status = 422;
-    response.body = { msg: "Incorrect user data. Name and role are required" };
+    response.body = { msg: "Incorrect user data. Name is required" };
     return;
   }
 
-  const userId = await createUser({ name, role, jiraAdmin });
+  const userId = await createUser({ name });
 
   response.body = { msg: "User created", userId };
 };
