@@ -1,39 +1,33 @@
+#!/usr/bin/env -S deno run --unstable
+
 import { parse } from "https://deno.land/std/flags/mod.ts";
 import * as inquirer from 'https://unpkg.com/inquirer@7.1.0/lib/inquirer.js'
+import { Input, Confirm, Toggle, Number, Select, Checkbox } from 'https://deno.land/x/cliffy/prompt.ts';
 
+const name = await Input.prompt( `What's your name?` );
 
-const { args } = Deno;
+const confirm = await Confirm.prompt( {
+    message: 'Would you like to buy a pizza?'
+} );
 
-const parsedArgs = parse(args);
+const toggle = await Toggle.prompt( {
+    message: 'Would you like to buy a pizza?'
+} );
 
-cli(parsedArgs)
+const input = await Input.prompt( {
+    message: `What's your name?`
+} );
 
-function displayHelpMsg(): string {
-  return `
-    -> commitment-cli v1.0
-    run the cli command with the following options:
-    create: create new item
-    `;
-}
+const number = await Number.prompt( {
+    message: 'How old are you?'
+} );
 
-function hasArgument(rawArgs:string[], arg: string){
-    return !!rawArgs.find((rawArg: string) => rawArg === arg) || false
-}
+const select = await Select.prompt( {
+    message: 'Select your pizza?',
+    options: [ 'margherita', 'caprese', Select.separator( 'Special' ), 'diavola' ]
+} );
 
-function parseArgumentsIntoOptions(rawArgs: string[]) {
-
-    return {
-        create: hasArgument(rawArgs, 'create'),
-        team: hasArgument(rawArgs, 'team'),
-        user: hasArgument(rawArgs, 'user')
-    }
-}
-
-function cli(rawArgs: any) {
-    console.log(rawArgs)
-    const options = parseArgumentsIntoOptions(rawArgs['_'])
-    console.log(options)
-    Object.assign(options, )
-}
-
-
+const checkbox = await Checkbox.prompt( {
+    message: `Du you like any extra's?`,
+    options: [ 'mozzarella', 'olive', Checkbox.separator( 'Special' ), 'buffalo mozzarella' ]
+} );
