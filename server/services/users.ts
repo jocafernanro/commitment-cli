@@ -26,7 +26,6 @@ export const createUser = async (userData: UserData): Promise<string> => {
     added: new Date()
   };
 
-
   await persistData([...users, newUser]);
 
   return newUser.id;
